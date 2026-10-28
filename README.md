@@ -1,76 +1,18 @@
-# kpm-hide-env
+# 声明
 
-APatch KernelPatch Module (KPM) for hiding root environment at the kernel level.
+因学业原因，本人暂时放缓各项目的更新，学业告一段落后继续。
 
-## What it does
+- 账号下的仓库目前设为**归档（只读）**，推送与合并请求会暂停处理；
+- 暂停期间页面与功能不保证更新速度，恢复后照常维护；
+- 原有说明文档已移至 `_readme.md`，内容保持不变。
 
-Hooks 5 Linux syscalls to intercept file access from non-root processes:
+## 为什么关注 keepandroidopen.org
 
-| Syscall | Nr | Action |
-|---|---|---|
-| `faccessat` | 48 | Block `access()` checks on root files |
-| `newfstatat` | 79 | Block `stat()` on root files |
-| `statx` | 291 | Block `statx()` on root files |
-| `openat` | 56 | Block `open()` on root files |
-| `getdents64` | 61 | Filter directory listings to hide root entries |
+安卓正在从「开放安装」走向受控分发：侧载限制、开发者验证、平台签名垄断，
+会直接压缩个人开发者与普通用户的空间。这与项目是否更新无关，值得持续关注。
 
-Hidden paths include: `/system/bin/su`, `/data/adb/`, Magisk files, Xposed, BusyBox, etc.
+<https://keepandroidopen.org>
 
-**Only affects non-root (uid != 0) processes.** Root shells and APatch itself are not affected.
+## 许可
 
-## Build
-
-### Via GitHub Actions (recommended)
-
-1. Push this repo to GitHub
-2. GitHub Actions will auto-build on push
-3. Download `hide_env.kpm` from Actions artifacts
-
-### Manually on Linux
-
-```bash
-# Install cross-compiler
-sudo apt install gcc-aarch64-linux-gnu
-
-# Clone KernelPatch
-git clone --depth=1 https://github.com/bmax121/KernelPatch.git ../KernelPatch
-
-# Build
-make TARGET_COMPILE=aarch64-linux-gnu- KP_DIR=../KernelPatch
-```
-
-## Install
-
-### Load (temporary, lost after reboot)
-1. Open APatch Manager → KPM tab
-2. Click + → Load
-3. Select `hide_env.kpm`
-
-### Embed (persistent, survives reboot)
-1. Open APatch Manager → KPM tab
-2. Click + → Embed
-3. Select `hide_env.kpm`
-4. Repatch boot.img
-
-## Control
-
-Via APatch Manager's KPM Control interface (CTL0):
-
-- `enable` - Enable hiding
-- `disable` - Disable hiding
-- `status` - Show module status
-- `add:/path/to/hide` - Add path to dynamic blacklist
-- `del:/path/to/hide` - Remove path from dynamic blacklist
-- `list` - List dynamic paths
-
-## Init args
-
-Pass `disable` as init args to start with hiding disabled.
-
-## Logs
-
-View kernel logs via `dmesg | grep hide_env` on the device.
-
-## License
-
-GPL v2
+放弃所有权利（Unlicense / 公有领域），可自由取用、修改与再分发。
